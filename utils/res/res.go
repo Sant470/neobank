@@ -2,12 +2,16 @@ package res
 
 import (
 	"encoding/json"
+	"github.com/sant470/neobank/utils/errors"
 	"net/http"
 )
 
-func JSON(rw http.ResponseWriter, status int, data interface{}) error {
+func JSON(rw http.ResponseWriter, status int, data interface{}) *errors.AppError{
 	rw.WriteHeader(status)
 	rw.Header().Set("Content-Type", "application/json")
-	return json.NewEncoder(rw).Encode(data)
+	if err := json.NewEncoder(rw).Encode(data); err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	return nil 
 }
 
